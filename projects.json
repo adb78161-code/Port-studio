@@ -1,0 +1,50 @@
+[
+  {
+    "title": "Your project title",
+    "category": "design",
+    "type": "Visual identity",
+    "description": "Write one clear sentence explaining the project and the value it brings.",
+    "details": "Explain the brief, your creative approach, what you delivered and the client's outcome. Only include real results and approved client details.",
+    "services": [
+      "Brand identity",
+      "Art direction",
+      "Social design"
+    ],
+    "cover": "",
+    "liveUrl": "",
+    "featured": true,
+    "theme": "art-a"
+  },
+  {
+    "title": "Website project",
+    "category": "web",
+    "type": "Website design",
+    "description": "Describe the website, who it was made for and what makes the experience useful.",
+    "details": "Add the challenge, your role, key features and the final handover. Link the live website if it is public.",
+    "services": [
+      "UI design",
+      "Responsive development",
+      "HTML · CSS · JS"
+    ],
+    "cover": "",
+    "liveUrl": "",
+    "featured": false,
+    "theme": "art-b"
+  },
+  {
+    "title": "Writing project",
+    "category": "writing",
+    "type": "Editorial writing",
+    "description": "Introduce the article, campaign or brand voice work in a customer-friendly way.",
+    "details": "Summarise the audience, tone, writing approach and deliverables. Add a public link if available.",
+    "services": [
+      "Copywriting",
+      "Editing",
+      "Storytelling"
+    ],
+    "cover": "",
+    "liveUrl": "",
+    "featured": false,
+    "theme": "art-c"
+  }
+]

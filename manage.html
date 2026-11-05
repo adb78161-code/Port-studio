@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#f7f3ed">
+<title>Adii Studio — Private Admin</title>
+<link rel="icon" href="adii-logo-transparent.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script>
+<style>
+:root{--bg:#f7f3ed;--surface:#fffdf9;--ink:#292722;--muted:#77736b;--accent:#bd725e;--sage:#d9ddce;--line:#e8e1d7;--serif:"Playfair Display",Georgia,serif;--sans:"DM Sans",Arial,sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55}button,input,textarea,select{font:inherit}button{cursor:pointer}:focus-visible{outline:3px solid var(--accent);outline-offset:3px}.wrap{max-width:1160px;margin:auto;padding:25px 18px 70px}header{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:28px}.brand{font:600 1.8rem var(--serif)}.brand span{color:var(--accent)}h1,h2,h3{font-family:var(--serif);font-weight:500}h1{font-size:clamp(2.2rem,5vw,3.5rem);margin:5px 0}h2{font-size:1.65rem;margin:0 0 5px}p,.muted{color:var(--muted)}.eyebrow{font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:700}.btn{border:0;border-radius:99px;padding:12px 17px;background:var(--accent);color:#fff;font-weight:700;font-size:.76rem}.btn.secondary{background:transparent;border:1px solid var(--line);color:var(--ink)}.btn.danger{background:#9c453d}.panel{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 12px 35px #30281f0b}.login{max-width:430px;margin:7vh auto}.field{display:grid;gap:6px;margin-top:14px}.field label{font-size:.7rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:700}.field input,.field textarea,.field select{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:11px;background:#fff;color:#292722}.field textarea{min-height:90px;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus{outline:2px solid #bd725e40;border-color:var(--accent)}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.tab{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:10px 16px}.tab.active{background:var(--ink);color:#fff}.grid{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;align-items:start}.project-list,.inbox{display:grid;gap:10px;margin-top:15px}.item{display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:center;border:1px solid var(--line);padding:9px;border-radius:13px}.item img{width:72px;height:66px;object-fit:cover;border-radius:9px;background:var(--sage)}.item strong{display:block;font-size:.88rem}.item small{color:var(--muted)}.item-actions{display:flex;gap:5px;flex-wrap:wrap}.item-actions button{padding:7px 9px;border-radius:8px;border:1px solid var(--line);background:transparent}.upload{border:1.5px dashed #c9b7a9;border-radius:13px;padding:18px;text-align:center;margin-top:12px;background:#faf5ef}.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.thumbs img{width:74px;height:74px;object-fit:cover;border-radius:10px}.enquiry{border:1px solid var(--line);border-radius:13px;padding:14px}.enquiry p{margin:5px 0;font-size:.88rem;white-space:pre-wrap}.status{padding:12px;border-radius:10px;background:#edf1e7;color:#4d6142;margin-top:12px;display:none}.empty{padding:20px;text-align:center;color:var(--muted);background:#f6f2ec;border-radius:12px}.hidden{display:none!important}.top-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.row{grid-template-columns:1fr}}@media(max-width:480px){.panel{padding:16px}.item{grid-template-columns:58px 1fr}.item img{width:58px;height:58px}.item-actions{grid-column:1/-1}.wrap{padding-inline:12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><a class="brand" href="index.html">adii<span>.</span> <small style="font:500 .7rem var(--sans);color:#777">PRIVATE STUDIO</small></a><div class="top-actions"><a class="btn secondary" href="index.html" target="_blank">View public site ↗</a><button class="btn secondary hidden" id="logoutBtn">Sign out</button></div></header>
+<section id="setupNotice" class="panel hidden"><div class="eyebrow">Setup required</div><h1>Connect your studio.</h1><p>Add your Supabase project URL and publishable anon key to <b>config.js</b>. Never put a service-role key in website files.</p></section>
+<section id="bootError" class="panel hidden" role="alert" style="margin:18px auto;max-width:650px"><div class="eyebrow">Dashboard status</div><h2 id="bootErrorTitle">Dashboard could not start</h2><p id="bootErrorText"></p><button class="btn secondary" type="button" onclick="location.reload()">Try again</button></section>
+<section id="loginView" class="panel login hidden">
+ <div class="eyebrow">Private owner access</div><h1>Welcome back.</h1><p>Sign in to manage artwork and customer enquiries. Visitors cannot access this dashboard.</p>
+ <form id="loginForm"><div class="field"><label>Email</label><input id="email" type="email" autocomplete="username" required placeholder="Your admin email"></div><div class="field"><label>Password</label><input id="password" type="password" autocomplete="current-password" required placeholder="Your password"></div><div class="top-actions" style="margin-top:18px"><button class="btn" type="submit">Sign in securely</button><button class="btn secondary" type="button" id="resetPassword">Forgot password?</button></div></form><div class="status" id="loginStatus"></div>
+</section>
+<section id="dashboard" class="hidden">
+ <div class="eyebrow">Owner dashboard</div><h1>Your creative business, <span style="color:var(--accent)">in your hands.</span></h1><p id="adminEmail">Signed in</p>
+ <div class="tabs"><button class="tab active" data-tab="projects">Artwork & projects</button><button class="tab" data-tab="enquiries">Customer enquiries <span id="enquiryCount"></span></button></div>
+ <section id="projectsTab" class="grid">
+  <div class="panel"><h2 id="formTitle">Add a project</h2><p>Upload images and publish your work. The first image is the cover.</p>
+   <form id="projectForm">
+    <div class="upload"><b>Choose artwork images</b><p>PNG, JPG or WebP · Multiple images supported</p><input id="images" type="file" accept="image/png,image/jpeg,image/webp" multiple style="max-width:100%;margin-top:8px"></div><div class="thumbs" id="thumbs"></div>
+    <div class="field"><label>Project title *</label><input id="title" required></div>
+    <div class="row"><div class="field"><label>Category</label><select id="category"><option value="design">Design / Art</option><option value="web">Website</option><option value="writing">Writing</option></select></div><div class="field"><label>Project type</label><input id="type" placeholder="Digital illustration"></div></div>
+    <div class="field"><label>Short description *</label><textarea id="description" required></textarea></div><div class="field"><label>Full case study</label><textarea id="details"></textarea></div>
+    <div class="field"><label>Services / tools (comma separated)</label><input id="services" placeholder="Illustration, branding, Photoshop"></div>
+    <div class="field"><label>Live project URL</label><input id="liveUrl" type="url" placeholder="https://..."></div>
+    <div class="row"><div class="field"><label>Featured</label><select id="featured"><option value="false">No</option><option value="true">Yes</option></select></div><div class="field"><label>Publish on website</label><select id="published"><option value="true">Published</option><option value="false">Draft (private)</option></select></div></div>
+    <div class="top-actions" style="margin-top:18px"><button class="btn" type="submit" id="saveBtn">Save project</button><button class="btn secondary" type="button" id="cancelEdit">Clear</button></div>
+   </form><div class="status" id="projectStatus"></div>
+  </div>
+  <aside class="panel"><h2>Your projects</h2><p>Only published projects appear publicly.</p><div class="project-list" id="projectList"></div></aside>
+ </section>
+ <section id="enquiriesTab" class="panel hidden"><h2>Customer enquiries</h2><p>Messages submitted through the public website.</p><div class="inbox" id="inbox"></div></section>
+</section>
+</div>
+<script>
+const SUPABASE_URL=window.ADII_SUPABASE_URL||"",SUPABASE_KEY=window.ADII_SUPABASE_ANON_KEY||"";
+const client=(SUPABASE_URL&&SUPABASE_KEY&&window.supabase)?window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY):null;
+const $=id=>document.getElementById(id);
+let currentUser=null,projects=[],editingId=null,newFiles=[],oldGallery=[];
+function status(id,msg){const el=$(id);el.textContent=msg;el.style.display="block";}
+function escapeText(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function slug(s){return s.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,55)||"artwork";}
+function showLogin(){ $("loginView").classList.remove("hidden");$("dashboard").classList.add("hidden");$("logoutBtn").classList.add("hidden");}
+function showDashboard(user){currentUser=user;$("loginView").classList.add("hidden");$("dashboard").classList.remove("hidden");$("logoutBtn").classList.remove("hidden");$("adminEmail").textContent=user.email||"Admin account";loadProjects();loadEnquiries();}
+function showBootError(title,message){
+ $("bootErrorTitle").textContent=title;
+ $("bootErrorText").textContent=message;
+ $("bootError").classList.remove("hidden");
+ $("loginView").classList.add("hidden");
+ $("dashboard").classList.add("hidden");
+}
+function hasAdminRole(user){
+ return user && user.app_metadata && user.app_metadata.role === "admin";
+}
+async function boot(){
+ try{
+  if(!SUPABASE_URL || !SUPABASE_KEY){$("setupNotice").classList.remove("hidden");return;}
+  if(!window.supabase || !window.supabase.createClient){showBootError("Supabase library did not load","Check your internet connection or try again. The Supabase client library could not be loaded.");return;}
+  if(!client){showBootError("Supabase configuration error","Check config.js: it must contain your project URL and sb_publishable_ key.");return;}
+  const {data,error}=await client.auth.getSession();
+  if(error)throw error;
+  $("setupNotice").classList.add("hidden");
+  if(data.session){
+   if(hasAdminRole(data.session.user))showDashboard(data.session.user);
+   else {showLogin();status("loginStatus","This account does not have admin permission yet. Run the admin-role setup SQL, then sign out and sign in again.");}
+  }else showLogin();
+  client.auth.onAuthStateChange((_event,session)=>{
+   if(session && hasAdminRole(session.user))showDashboard(session.user);
+   else if(session){showLogin();status("loginStatus","Signed in, but this account has no admin role. Ask the project owner to grant role=admin in Supabase.");}
+   else showLogin();
+  });
+ }catch(err){showBootError("Could not connect to Supabase",err.message||String(err));}
+}
+$("loginForm").onsubmit=async e=>{
+ e.preventDefault();
+ if(!client){showBootError("Supabase is not configured","Check config.js and reload this page.");return;}
+ const btn=$("loginForm").querySelector('button[type="submit"]');btn.disabled=true;
+ try{
+  const {data,error}=await client.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});
+  if(error)throw error;
+  if(!hasAdminRole(data.user)){await client.auth.signOut();status("loginStatus","Your email and password are valid, but this account has not been granted admin permission. The setup guide includes a one-time admin SQL step.");}
+  else { $("loginStatus").style.display="none"; showDashboard(data.user); }
+ }catch(err){status("loginStatus",err.message||String(err));}
+ finally{btn.disabled=false;}
+};
+$("resetPassword").onclick=async()=>{if(!client){status("loginStatus","Supabase is not configured.");return;}if(!$("email").value){status("loginStatus","Enter your admin email first.");return;}const {error}=await client.auth.resetPasswordForEmail($("email").value,{redirectTo:location.href});status("loginStatus",error?"Could not send reset email: "+error.message:"Password reset email sent. Check your inbox.");};
+$("logoutBtn").onclick=()=>client.auth.signOut();
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===b));$("projectsTab").classList.toggle("hidden",b.dataset.tab!=="projects");$("enquiriesTab").classList.toggle("hidden",b.dataset.tab!=="enquiries");if(b.dataset.tab==="enquiries")loadEnquiries();});
+$("images").onchange=()=>{newFiles=[...$("images").files];$("thumbs").innerHTML="";newFiles.forEach(f=>{const img=document.createElement("img");img.src=window.URL.createObjectURL(f);$("thumbs").append(img);});};
+function clearForm(){editingId=null;newFiles=[];oldGallery=[];$("projectForm").reset();$("images").value="";$("thumbs").innerHTML="";$("formTitle").textContent="Add a project";$("saveBtn").textContent="Save project";}
+$("cancelEdit").onclick=clearForm;
+async function loadProjects(){const {data,error}=await client.from("projects").select("*").order("created_at",{ascending:false});if(error){status("projectStatus","Cannot load projects: "+error.message);return;}projects=data||[];renderProjects();}
+function renderProjects(){$("projectList").innerHTML="";if(!projects.length){$("projectList").innerHTML='<div class="empty">No projects yet. Upload your first artwork.</div>';return;}projects.forEach(p=>{const row=document.createElement("div");row.className="item";const img=document.createElement("img");img.src=p.cover_url||"";const info=document.createElement("div");info.innerHTML=`<strong>${escapeText(p.title)}</strong><small>${escapeText(p.category)} · ${p.published?"Published":"Draft"}</small>`;const actions=document.createElement("div");actions.className="item-actions";const edit=document.createElement("button");edit.textContent="Edit";edit.onclick=()=>editProject(p);const del=document.createElement("button");del.textContent="Delete";del.onclick=()=>deleteProject(p);actions.append(edit,del);row.append(img,info,actions);$("projectList").append(row);});}
+function editProject(p){editingId=p.id;oldGallery=p.gallery_urls||[];$("title").value=p.title;$("category").value=p.category;$("type").value=p.project_type||"";$("description").value=p.description;$("details").value=p.details||"";$("services").value=(p.services||[]).join(", ");$("liveUrl").value=p.live_url||"";$("featured").value=String(!!p.featured);$("published").value=String(!!p.published);$("formTitle").textContent="Edit project";$("saveBtn").textContent="Save changes";$("thumbs").innerHTML=oldGallery.map(url=>`<img src="${url}" alt="Existing artwork">`).join("");window.scrollTo({top:0,behavior:"smooth"});}
+async function uploadImages(files,projectSlug){const urls=[];for(let i=0;i<files.length;i++){const file=files[i];const ext=(file.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"");const path=`${projectSlug}/${Date.now()}-${i}.${ext}`;const {error}=await client.storage.from("artwork").upload(path,file,{upsert:true,contentType:file.type});if(error)throw error;const {data}=client.storage.from("artwork").getPublicUrl(path);urls.push(data.publicUrl);}return urls;}
+$("projectForm").onsubmit=async e=>{e.preventDefault();$("saveBtn").disabled=true;try{const title=$("title").value.trim(),projectSlug=slug(title);let gallery=oldGallery;if(newFiles.length)gallery=[...oldGallery,...await uploadImages(newFiles,projectSlug)];const payload={title,category:$("category").value,project_type:$("type").value.trim()||"Creative project",description:$("description").value.trim(),details:$("details").value.trim(),services:$("services").value.split(",").map(x=>x.trim()).filter(Boolean),cover_url:gallery[0]||null,gallery_urls:gallery,live_url:$("liveUrl").value.trim()||null,featured:$("featured").value==="true",published:$("published").value==="true",owner_id:currentUser.id};const result=editingId?await client.from("projects").update(payload).eq("id",editingId).select().single():await client.from("projects").insert(payload).select().single();if(result.error)throw result.error;status("projectStatus","Project saved successfully.");clearForm();await loadProjects();}catch(err){status("projectStatus","Save failed: "+err.message);}finally{$("saveBtn").disabled=false;}};
+async function deleteProject(p){if(!confirm("Permanently delete "+p.title+"?"))return;const {error}=await client.from("projects").delete().eq("id",p.id);if(error){status("projectStatus","Delete failed: "+error.message);return;}await loadProjects();}
+async function loadEnquiries(){const {data,error}=await client.from("enquiries").select("*").order("created_at",{ascending:false}).limit(100);if(error){$("inbox").innerHTML='<div class="empty">Could not load enquiries: '+escapeText(error.message)+'</div>';return;}$("enquiryCount").textContent=data?.length?`(${data.length})`:"";$("inbox").innerHTML="";if(!data?.length){$("inbox").innerHTML='<div class="empty">No enquiries yet. New customer messages will appear here.</div>';return;}data.forEach(q=>{const box=document.createElement("article");box.className="enquiry";const title=document.createElement("strong");title.textContent=q.project||q.service||"New enquiry";const meta=document.createElement("p");meta.textContent=`${q.name} · ${q.email} · ${new Date(q.created_at).toLocaleString()}`;const msg=document.createElement("p");msg.textContent=q.message||"";const extra=document.createElement("p");extra.textContent=[q.service,q.budget].filter(Boolean).join(" · ");const actions=document.createElement("div");actions.className="top-actions";const reply=document.createElement("a");reply.className="btn";reply.textContent="Reply by email";reply.href="mailto:"+encodeURIComponent(q.email)+"?subject="+encodeURIComponent("Re: "+(q.project||"Your enquiry"));const del=document.createElement("button");del.className="btn danger";del.textContent="Delete";del.onclick=async()=>{if(confirm("Delete this enquiry?")){const {error}=await client.from("enquiries").delete().eq("id",q.id);if(error)alert(error.message);else loadEnquiries();}};actions.append(reply,del);box.append(title,meta,extra,msg,actions);$("inbox").append(box);});}
+boot();
+</script>
+</body></html>

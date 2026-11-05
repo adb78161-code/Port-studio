@@ -1,0 +1,1 @@
+Place your project screenshots in this folder. Then set each project's cover path in PROJECTS, e.g. assets/my-project.jpg
